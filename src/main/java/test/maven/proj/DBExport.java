@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DBExport {
@@ -14,12 +15,12 @@ public class DBExport {
 	static final String POSTGRES_DRIVER = "org.postgresql.Driver"; 
 	
 	
-	public static void main( String[] args ) {
+	public static void main( String[] args ) throws IOException {
 		// TODO Auto-generated method stub
 		getInputs();
 	}
 
-	private static void getInputs() {
+	private static void getInputs() throws IOException {
 		// TODO Auto-generated method stub
 		String DBDriver = "";
 		String userName = "";
@@ -54,10 +55,15 @@ public class DBExport {
 		System.out.println("Enter target file name and location (without extension):");
 		fileName = sc.next();
 		fileName = fileName + ".xlsx";
-		System.out.println("Enter Query:");
-		Scanner in = new Scanner(System.in);
-		query+= in.nextLine();
-		
+		Scanner queryInput = new Scanner(System.in); 
+		System.out.println("Enter Query:");      
+        while (queryInput.hasNextLine()){ //no need for "== true"
+            String input = queryInput.nextLine();
+            if(input == null || input.isEmpty()){ //if the line is empty
+                break;  //exit the loop
+            }
+            query+=input.trim() + " ";         
+        }
 		getReportInExcel(DBDriver, userName, password, dbURL, fileName, query);
 		
 	}
